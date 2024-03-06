@@ -1,5 +1,5 @@
 # The Project:
-## AirBnb Project
+## AirBnb clone Project
 
 # The Command Interpreter:
 ##	how to start it:
