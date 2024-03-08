@@ -9,6 +9,7 @@ classes:
 """
 import uuid
 import datetime
+import models
 
 
 class BaseModel():
@@ -36,6 +37,7 @@ class BaseModel():
             self.id = str(uuid.uuid4())
             self.created_at = datetime.datetime.now()
             self.updated_at = datetime.datetime.now()
+            models.storage.new(self)
 
     def __str__(self):
         """A Method that returns the class details in string format
@@ -44,15 +46,16 @@ class BaseModel():
             _type_: _description_
         """
 
-        return (f"[{self.__class__}] ({self.id}) {self.__dict__}")
+        return (f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}")
     
 
     def save(self):
         self.updated_at = datetime.datetime.now()
+        models.storage.save()
     
     def to_dict(self):
-        model_dict = self.__dict__
+        model_dict = self.__dict__.copy()
         model_dict["__class__"] =  self.__class__.__name__
-        model_dict['created_at'] = self.created_at.strftime("%Y-%m-%dT%H:%M:%S.%f")
+        model_dict['created_at'] = model_dict['created_at'].isoformat()
         model_dict['updated_at'] = model_dict['updated_at'].isoformat()
         return (model_dict)
