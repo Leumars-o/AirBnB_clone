@@ -4,7 +4,7 @@ import json
 import os
 
 class FileStorage:
-    __file_path = "file.json"
+    __file_path = "./models/engine/file.json"
     __objects = {}
 
     def __init__(self):
@@ -32,8 +32,8 @@ class FileStorage:
                     python_dic = json.load(file)
                     for key, value in python_dic.items():
                         FileStorage.__objects[key] = BaseModel(**value)
-                except FileNotFoundError:
-                    pass
+                except (FileNotFoundError, json.JSONDecodeError):
+                    self.save()
         else:
-            pass
+            self.save()
 
