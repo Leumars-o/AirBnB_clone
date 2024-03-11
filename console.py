@@ -8,8 +8,10 @@ Class:
     interface by inheritting from cmd module.
 """
 import cmd
+import models
+
 from models.base_model import BaseModel
-from custom_functions.to_pydic import jsonpydic
+# from custom_functions.to_pydic import json_to_pydic
 import json
 
 class HBNBCommand(cmd.Cmd):
@@ -35,7 +37,8 @@ class HBNBCommand(cmd.Cmd):
         of an instance based on the class name and id.
     """
     prompt = "(hbnb) "
-    
+    class_list = ['BaseModel']
+
     def do_quit(self, args):
         """ Quit command to exit the program
         """
@@ -50,64 +53,105 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, args):
         """Creates a new instance of BaseModel and print its id"""
-        if not args:
-            print(" **Class name missing** ")
-        elif args == "BaseModel":
-            new_instance = BaseModel()
+        tokens = args.split()
+        if not self.class_check(tokens):
+            return
+        new_instance = eval(tokens[0] + '()')
+        if isinstance(new_instance, BaseModel):
             new_instance.save()
             print(new_instance.id)
-
-        else:
-            print(" ** class doesn't exist ** ")
+        return
     
     def do_show(self, args):
         """Prints the string representation of an instance
         based on the class name and id"""
-        if not args:
-            print(" ** class name missing ** ")
-        args = args.split()
-        if len(args) > 0:
-            if args[0] != "BaseModel":
-                print(" ** class doesn't exist ** ")
-            elif len(args) < 2:
-                print(" ** instance id missing ** ")
-            else:
-                data = jsonpydic()
-                instanceFound = False
-                for key, value in data.items():
-                    if value.get("id") == args[1]:
-                        instanceFound = True
-                        print(str(value))
-                        break
-                if instanceFound == False:
-                    print(" ** no instance found ** ")
+        tokens = args.split()
+        objects = models.storage.all()
+        if not self.class_check(tokens):
+            return
+        if not self.id_check(tokens):
+            return
+        key = f"{tokens[0]}.{tokens[1]}"
+        print(objects[key])
     
     def do_destroy(self, args):
         """ Deletes an object/instance using classname and id """
-        if not args:
-            print(" ** class name missing ** ")
-        
-        args = args.split()
-        if len(args) > 0:
-            if args[0] != 'BaseModel':
-                print(" ** class doesn't exist ** ")
-            elif len(args) < 2:
-                print(" ** instance id missing ** ")
-            else:
-                data = jsonpydic()
-                data_copy = data.copy()
-                instanceFound = False
-                for key, value in data_copy.items():
-                    if value['id'] == args[1]:
-                        instanceFound = True
-                        del data_copy[key]
-                        print("done")
-                with open("./models/engine/file.json", 'w') as js_file:
-                    json.dump(data_copy, js_file)
-                if instanceFound == False:
-                    print(" ** no instance found ** ")
-                    
+        tokens = args.split()
+        objects = models.storage.all()
+        if not self.class_check(tokens):
+            return
+        if not self.id_check(tokens):
+            return
+        key = f"{tokens[0]}.{tokens[1]}"
+        del objects[key]
+        models.storage.save()
+                
+    def do_all(self, args):
+        tokens = args.split()
+        objects = models.storage.all()
+        new_list = []
+        if len(tokens) == 0:
+            for value in objects.values():
+                new_list.append(str(value))
+        elif tokens[0] in HBNBCommand.class_list:
+            for key, value in objects.items():
+                if tokens[0] == value.__class__.__name__:
+                    new_list.append(str(value))
+        else:
+            print("** class doesn't exist **")
+            return False
+        print(new_list)
+    
+    def do_update(self, args):
+        tokens = args.split()
+        if tokens[3].find('"') != -1:
+            temp = tokens[3]
+            start = temp.find('"')
+            end = temp.find('"', start + 1)
+            tokens[3] = temp[start + 1 : end]
 
+        objects = models.storage.all()
+
+        if not self.class_check(tokens):
+            return
+        if not self.id_check(tokens):
+            return
+        key = f"{tokens[0]}.{tokens[1]}"
+        setattr(objects[key], tokens[2], tokens[3])
+        models.storage.save()
+    
+    @classmethod
+    def class_check(cls, tokens):
+        if len(tokens) == 0:
+            print('** class name missing **')
+            return False
+        elif tokens[0] not in cls.class_list:
+            print("** class doesn't exist **")
+            return False
+        return True
+    
+    @staticmethod
+    def id_check(tokens):
+        """Static method to verify the id.
+        """
+        if len(tokens) < 2:
+            print('** instance id missing **')
+            return False
+        objects = models.storage.all()
+        key = f"{tokens[0]}.{tokens[1]}"
+        if key not in objects.keys():
+            print('** no instance found **')
+            return False
+        return True
+    
+    @staticmethod
+    def attr_check(tokens):
+        if len(tokens) < 3:
+            print("** attribute name missing **")
+            return False
+        if len(tokens) < 4:
+            print("** value missing **")
+        return True
     
     def emptyline(self):
         "Do nothing when an emptyline is entered"
