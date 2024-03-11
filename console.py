@@ -8,11 +8,16 @@ Class:
     interface by inheritting from cmd module.
 """
 import cmd
-import models
-
-from models.base_model import BaseModel
-# from custom_functions.to_pydic import json_to_pydic
 import json
+import models
+from models.base_model import BaseModel
+from models.user import User
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
+
 
 class HBNBCommand(cmd.Cmd):
     """
@@ -35,9 +40,16 @@ class HBNBCommand(cmd.Cmd):
 
         do_show:- This Method prints the string representation
         of an instance based on the class name and id.
+
+        do_all:- This method prints the string representation of all instances
+        based on the class name and id.
+
+        do _update:- Updates the attribute of an Object based on the class name
+        and ID
+
     """
     prompt = "(hbnb) "
-    class_list = ['BaseModel']
+    class_list = ['BaseModel', 'User', 'State', 'City', 'Amenity', 'Place', 'Review']
 
     def do_quit(self, args):
         """ Quit command to exit the program
@@ -87,6 +99,13 @@ class HBNBCommand(cmd.Cmd):
         models.storage.save()
                 
     def do_all(self, args):
+        """all command prints a string repr of all instances
+        based on class name and id
+
+        Args:
+            args (string): Class name and Instance ID
+
+        """
         tokens = args.split()
         objects = models.storage.all()
         new_list = []
@@ -103,6 +122,12 @@ class HBNBCommand(cmd.Cmd):
         print(new_list)
     
     def do_update(self, args):
+        """updates the attributes of an Object
+
+        Args:
+            args (str): ClassName ID Attribute "Value"
+
+        """
         tokens = args.split()
         if tokens[3].find('"') != -1:
             temp = tokens[3]
@@ -122,6 +147,10 @@ class HBNBCommand(cmd.Cmd):
     
     @classmethod
     def class_check(cls, tokens):
+        """Class method checks if a given token matches
+        a class name in the `class_list`
+
+        """
         if len(tokens) == 0:
             print('** class name missing **')
             return False
@@ -146,6 +175,10 @@ class HBNBCommand(cmd.Cmd):
     
     @staticmethod
     def attr_check(tokens):
+        """static method to verify a command passed to
+        update an attribute is valid
+        
+        """
         if len(tokens) < 3:
             print("** attribute name missing **")
             return False

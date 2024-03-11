@@ -3,12 +3,17 @@
 """
 Created on Sat Jun 27 13:56:43 2020
 
-@authors: Robinson Montes
-          Carlos Murcia
+@authors: Samuel Okechukwu
+          Princewill Elobhose
 """
 import json
 from models.base_model import BaseModel
 from models.user import User
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
 
 
 class FileStorage:
@@ -17,7 +22,7 @@ class FileStorage:
     files.
     """
     __file_path = 'file.json'
-    __objects = dict()
+    __objects = {}
 
     def __init__(self):
         """init method for FileStorage class
@@ -43,8 +48,8 @@ class FileStorage:
         """serializes __objects to the JSON file (path: __file_path)
         """
         dictionary = dict()
-        for k, v in FileStorage.__objects.items():
-            dictionary[k] = v.to_dict()
+        for key, value in FileStorage.__objects.items():
+            dictionary[key] = value.to_dict()
         with open(FileStorage.__file_path, 'w', encoding='utf-8') as file:
             json.dump(dictionary, file)
 
@@ -56,7 +61,7 @@ class FileStorage:
         try:
             with open(FileStorage.__file_path, 'r', encoding='utf-8') as file:
                 json_load = json.load(file)
-            for k, v in json_load.items():
-                FileStorage.__objects[k] = BaseModel(**v)
+            for key, value in json_load.items():
+                FileStorage.__objects[key] = BaseModel(**value)
         except:
             pass
