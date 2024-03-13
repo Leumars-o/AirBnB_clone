@@ -95,7 +95,8 @@ class HBNBCommand(cmd.Cmd):
         print(objects[key])
 
     def do_destroy(self, args):
-        """ Deletes an object/instance using classname and id """
+        """ Deletes an object/instance using classname and id 
+        """
         tokens = args.split()
         objects = models.storage.all()
         if not self.class_check(tokens):
@@ -154,6 +155,10 @@ class HBNBCommand(cmd.Cmd):
         models.storage.save()
 
     def default(self, args):
+        """
+        A predefined method that is executed when no
+        specific command or input is provided
+        """
         objects = models.storage.all()
         tokens = args.strip('()').split('.')
         if len(tokens) < 2:
@@ -185,7 +190,14 @@ class HBNBCommand(cmd.Cmd):
             if HBNBCommand.attr_check(cmd_arg):
                 token = f"{cmd_class} {cmd_arg}"
                 HBNBCommand.do_show(self, token)
-        return
+            return
+        if cmd_att[0] == "destroy":
+            # if HBNBCommand.id_check(cmd_arg):
+            token = f"{cmd_class} {cmd_arg}"
+            HBNBCommand.do_destroy(self, token)
+            return
+
+    
 
     @classmethod
     def class_check(cls, tokens):
