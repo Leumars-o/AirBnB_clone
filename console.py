@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """
-This from models.engine import filemodule create a custom console for manipulating data
-without a visual interface.
+This from models.engine import filemodule create a custom console
+for manipulating data without a visual interface.
 
 Class:
     HBNBCommand:- This class creates a custom Command line
@@ -49,7 +49,8 @@ class HBNBCommand(cmd.Cmd):
 
     """
     prompt = "(hbnb) "
-    class_list = ['BaseModel', 'User', 'State', 'City', 'Amenity', 'Place', 'Review']
+    class_list = ['BaseModel', 'User', 'State', 'City', 'Amenity',
+                  'Place', 'Review']
 
     def do_quit(self, args):
         """ Quit command to exit the program
@@ -73,7 +74,7 @@ class HBNBCommand(cmd.Cmd):
             new_instance.save()
             print(new_instance.id)
         return
-    
+
     def do_show(self, args):
         """Prints the string representation of an instance
         based on the class name and id"""
@@ -85,7 +86,7 @@ class HBNBCommand(cmd.Cmd):
             return
         key = f"{tokens[0]}.{tokens[1]}"
         print(objects[key])
-    
+
     def do_destroy(self, args):
         """ Deletes an object/instance using classname and id """
         tokens = args.split()
@@ -97,7 +98,7 @@ class HBNBCommand(cmd.Cmd):
         key = f"{tokens[0]}.{tokens[1]}"
         del objects[key]
         models.storage.save()
-                
+
     def do_all(self, args):
         """all command prints a string repr of all instances
         based on class name and id
@@ -120,7 +121,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
             return False
         print(new_list)
-    
+
     def do_update(self, args):
         """updates the attributes of an Object
 
@@ -133,7 +134,7 @@ class HBNBCommand(cmd.Cmd):
             temp = tokens[3]
             start = temp.find('"')
             end = temp.find('"', start + 1)
-            tokens[3] = temp[start + 1 : end]
+            tokens[3] = temp[start + 1: end]
 
         objects = models.storage.all()
 
@@ -144,7 +145,7 @@ class HBNBCommand(cmd.Cmd):
         key = f"{tokens[0]}.{tokens[1]}"
         setattr(objects[key], tokens[2], tokens[3])
         models.storage.save()
-    
+
     @classmethod
     def class_check(cls, tokens):
         """Class method checks if a given token matches
@@ -158,7 +159,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
             return False
         return True
-    
+
     @staticmethod
     def id_check(tokens):
         """Static method to verify the id.
@@ -172,24 +173,24 @@ class HBNBCommand(cmd.Cmd):
             print('** no instance found **')
             return False
         return True
-    
+
     @staticmethod
     def attr_check(tokens):
         """static method to verify a command passed to
         update an attribute is valid
-        
+
         """
+
         if len(tokens) < 3:
             print("** attribute name missing **")
             return False
         if len(tokens) < 4:
             print("** value missing **")
         return True
-    
+
     def emptyline(self):
         "Do nothing when an emptyline is entered"
         pass
-
 
 
 if __name__ == '__main__':

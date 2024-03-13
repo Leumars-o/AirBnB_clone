@@ -54,7 +54,7 @@ class FileStorage:
             json.dump(dictionary, file)
 
     def reload(self):
-        """deserializes the JSON file to __objects ONLY if the JASON file
+        """deserializes the JSON file to __objects ONLY if the JSON file
         exists, otherwise, do nothing.  If the file doesn't exist, exceptions
         should be raised
         """
@@ -63,5 +63,5 @@ class FileStorage:
                 json_load = json.load(file)
             for key, value in json_load.items():
                 FileStorage.__objects[key] = BaseModel(**value)
-        except:
+        except FileNotFoundError:
             pass

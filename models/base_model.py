@@ -27,12 +27,14 @@ class BaseModel():
     def __init__(self, *args, **kwargs):
         if kwargs and len(kwargs) != 0:
             for key, value in kwargs.items():
-                if key == 'created_at' or key == 'updated_at' :
-                    value = datetime.datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
+                if key == 'created_at' or key == 'updated_at':
+                    value = datetime.datetime.strptime(
+                        value, "%Y-%m-%dT%H:%M:%S.%f"
+                        )
                 if key != "__class__":
                     try:
                         setattr(self, key, value)
-                    except:
+                    except ValueError:
                         raise ValueError
         else:
             self.id = str(uuid.uuid4())
@@ -44,19 +46,18 @@ class BaseModel():
         """A Method that returns the class details in string format
 
         Returns:
-            _type_: _description_
+            str: string represemtation of the class
         """
 
         return (f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}")
-    
 
     def save(self):
         self.updated_at = datetime.datetime.now()
         models.storage.save()
-    
+
     def to_dict(self):
         model_dict = self.__dict__.copy()
-        model_dict["__class__"] =  self.__class__.__name__
+        model_dict["__class__"] = self.__class__.__name__
         model_dict['created_at'] = model_dict['created_at'].isoformat()
         model_dict['updated_at'] = model_dict['updated_at'].isoformat()
         return (model_dict)
