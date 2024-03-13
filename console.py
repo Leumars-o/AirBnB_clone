@@ -162,6 +162,8 @@ class HBNBCommand(cmd.Cmd):
         cmd_class = tokens[0]
         cmd_class = cmd_class[0].capitalize() + cmd_class[1:]
         cmd_att = tokens[1].strip(")").split('(')
+        if len(cmd_att) > 1:
+            cmd_arg = cmd_att[1].strip('""')
         if cmd_class not in HBNBCommand.class_list:
             print("** class doesn't exist **")
             return
@@ -178,6 +180,12 @@ class HBNBCommand(cmd.Cmd):
                 if cmd_class == key[0]:
                     count += 1
             print(count)
+            return
+        if cmd_att[0] == "show":
+            if HBNBCommand.attr_check(cmd_arg):
+                token = f"{cmd_class} {cmd_arg}"
+                HBNBCommand.do_show(self, token)
+        return
 
     @classmethod
     def class_check(cls, tokens):
