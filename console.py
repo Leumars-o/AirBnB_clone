@@ -51,6 +51,13 @@ class HBNBCommand(cmd.Cmd):
     prompt = "(hbnb) "
     class_list = ['BaseModel', 'User', 'State', 'City', 'Amenity',
                   'Place', 'Review']
+    class_atts = {
+        "all": "do_all", 
+        "count": "do_count",
+        "show": "do_show", 
+        "update": "do_update", 
+        "destroy": "do_destroy"
+        }
 
     def do_quit(self, args):
         """ Quit command to exit the program
@@ -146,6 +153,24 @@ class HBNBCommand(cmd.Cmd):
         setattr(objects[key], tokens[2], tokens[3])
         models.storage.save()
 
+    def default(self, args):
+        tokens = args.strip('()').split('.')
+        if len(tokens) < 2:
+            print("** missing attribute **")
+            return
+        cmd_class = tokens[0].capitalize()
+        print(cmd_class)
+        cmd_att = tokens[1].strip(")").split('(')
+        if cmd_class not in HBNBCommand.class_list:
+            print("** class doesn't exist **")
+            return
+        if cmd_att[0] not in HBNBCommand.class_atts:
+            print("** attribute doesn't exist")
+            return
+        if cmd_att[0] == "all":
+            HBNBCommand.do_all(self, cmd_class)
+        return
+    
     @classmethod
     def class_check(cls, tokens):
         """Class method checks if a given token matches
@@ -187,6 +212,7 @@ class HBNBCommand(cmd.Cmd):
         if len(tokens) < 4:
             print("** value missing **")
         return True
+
 
     def emptyline(self):
         "Do nothing when an emptyline is entered"
