@@ -154,6 +154,7 @@ class HBNBCommand(cmd.Cmd):
         models.storage.save()
 
     def default(self, args):
+        objects = models.storage.all()
         tokens = args.strip('()').split('.')
         if len(tokens) < 2:
             print("** missing attribute **")
@@ -169,7 +170,14 @@ class HBNBCommand(cmd.Cmd):
             return
         if cmd_att[0] == "all":
             HBNBCommand.do_all(self, cmd_class)
-        return
+            return
+        if cmd_att[0] == "count":
+            count = 0
+            for k in objects.keys():
+                key = k.split(".")
+                if cmd_class == key[0]:
+                    count += 1
+            print(count)
 
     @classmethod
     def class_check(cls, tokens):
