@@ -7,7 +7,7 @@ import sys
 import unittest
 import inspect
 import io
-import pep8
+import pycodestyle
 from contextlib import redirect_stdout
 from console import HBNBCommand
 
@@ -28,7 +28,7 @@ class TestHBNBCommand(unittest.TestCase):
         """
         Test that console.py file conform to PEP8
         """
-        pep8style = pep8.StyleGuide(quiet=True)
+        pep8style = pycodestyle.StyleGuide(quiet=True)
         result = pep8style.check_files(['models/console.py'])
         self.assertEqual(result.total_errors, 1,
                          "Found code style errors (and warnings).")
@@ -37,7 +37,7 @@ class TestHBNBCommand(unittest.TestCase):
         """
         Test that test_console.py file conform to PEP8
         """
-        pep8style = pep8.StyleGuide(quiet=True)
+        pep8style = pycodestyle.StyleGuide(quiet=True)
         result = pep8style.check_files(['tests/test_models/test_console.py'])
         self.assertEqual(result.total_errors, 1,
                          "Found code style errors (and warnings).")
