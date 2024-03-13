@@ -95,7 +95,7 @@ class HBNBCommand(cmd.Cmd):
         print(objects[key])
 
     def do_destroy(self, args):
-        """ Deletes an object/instance using classname and id 
+        """ Deletes an object/instance using classname and id
         """
         tokens = args.split()
         objects = models.storage.all()
@@ -196,8 +196,14 @@ class HBNBCommand(cmd.Cmd):
             token = f"{cmd_class} {cmd_arg}"
             HBNBCommand.do_destroy(self, token)
             return
-
-    
+        if cmd_att[0] == "update":
+            cmd_update = cmd_att[1].split(', ')
+            tokens = []
+            for item in cmd_update:
+                tokens.append(item.strip('"'))
+            vals = f"{cmd_class} {tokens[0]} {tokens[1]} {tokens[2]}"
+            HBNBCommand.do_update(self, vals)
+            return
 
     @classmethod
     def class_check(cls, tokens):
