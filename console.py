@@ -158,8 +158,8 @@ class HBNBCommand(cmd.Cmd):
         if len(tokens) < 2:
             print("** missing attribute **")
             return
-        cmd_class = tokens[0].capitalize()
-        print(cmd_class)
+        cmd_class = tokens[0]
+        cmd_class = cmd_class[0].capitalize() + cmd_class[1:]
         cmd_att = tokens[1].strip(")").split('(')
         if cmd_class not in HBNBCommand.class_list:
             print("** class doesn't exist **")
