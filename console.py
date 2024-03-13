@@ -52,10 +52,10 @@ class HBNBCommand(cmd.Cmd):
     class_list = ['BaseModel', 'User', 'State', 'City', 'Amenity',
                   'Place', 'Review']
     class_atts = {
-        "all": "do_all", 
+        "all": "do_all",
         "count": "do_count",
-        "show": "do_show", 
-        "update": "do_update", 
+        "show": "do_show",
+        "update": "do_update",
         "destroy": "do_destroy"
         }
 
@@ -170,7 +170,7 @@ class HBNBCommand(cmd.Cmd):
         if cmd_att[0] == "all":
             HBNBCommand.do_all(self, cmd_class)
         return
-    
+
     @classmethod
     def class_check(cls, tokens):
         """Class method checks if a given token matches
@@ -212,7 +212,6 @@ class HBNBCommand(cmd.Cmd):
         if len(tokens) < 4:
             print("** value missing **")
         return True
-
 
     def emptyline(self):
         "Do nothing when an emptyline is entered"
