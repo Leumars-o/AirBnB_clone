@@ -38,19 +38,12 @@ button:hover {
     
 }
 
-.locations:hover {
-    background-color: aqua;
-}
-
 .amenities {
     margin-right: auto;
     display: grid;
     place-content: center;
 }
 
-.amenities:hover {
-    background-color: bisque;
-}
 .locations h3,
 .amenities h3 {
     font-weight: 600;
