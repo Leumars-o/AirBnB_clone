@@ -59,11 +59,11 @@ button:hover {
 }
 
 .popover {
+    width: 100%;
     border: 1px solid #DDDDDD;
     border-radius: 4px;
     background-color: #FAFAFA;
     position: absolute;
-    width: 100%;
     top: 100%;
     display: none;
 }
